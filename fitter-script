@@ -1,0 +1,52 @@
+#!/bin/csh
+#converts all files in the original caputues folder to jpeg in jpeg-exports
+# pjb08r@zepler.net
+# 2011-05-12
+# exit status 
+#	0 sucess
+#	1 wrong parameters sent
+#	2 not the correct hierachy
+#	3 lpfile not found
+#	4 No valid jpef/nef files found
+set nonomatch
+if($#argv != 2) then
+	echo "Wrong number of parameters specified"
+	echo "Usage:" $0 "default-lpfile(full path) folder to fit"
+	exit 1
+endif
+
+set lpfile=$1
+set workingdir =  $2
+cd $workingdir
+if((! -d original-captures) || (! -d jpeg-exports) || (! -d finished-files) || (! -d assembly-files)) then
+	#It's not a valid ptm folder hierachy
+	echo "No valid folder structure detected"
+	exit 2
+endif
+
+if (! -e $lpfile) then
+	#lpfile doesn't exist or full path isn't given
+	echo "Not able to find lpfile on path specified, make sure it's a full path"
+	exit 3
+endif
+
+
+echo "copy default lp file "
+cp $lpfile ./assembly-files/capture.lp
+if ( -e original-captures/1.jpg ) then
+	#check to see if jpegs in orginal captures
+	cp original-captures/*.jpg jpeg-exports/
+	echo "Copied jpegs to folder"
+else if ( -e original-captures/0.nef) then 
+	#else check if raw and convert
+	ufraw-batch --out-type=jpeg original-captures*.nef --out-path=jpeg-exports
+	echo "Converted all files to jpeg"
+else
+	#else panic - no idea what to do so quit
+	echo "No idea what to do as no jpeg or NEF files offered"
+	exit 4
+endif
+#run the fitter
+echo "Running PTMFitter"
+ptmfit -cache -i ./assembly-files/capture.lp -o finished-files/output.ptm
+echo "PTMFitter Complete"
