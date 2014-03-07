@@ -1,4 +1,4 @@
-#!/bin/csh
+#!/bin/csh 
 #converts all files in the original caputues folder to jpeg in jpeg-exports
 # pjb08r@zepler.net
 # 2011-05-12
@@ -46,7 +46,22 @@ else
 	exit 4
 endif
 #run the fitter
+set crop = ""
+grep "Selection" camsettings.txt
+if ($status == 0) then
+    set sel = `grep Selection camsettings.txt`
+    set x = `echo $sel | cut -f 2 -d " " | tr -d \" `
+    set y = `echo $sel | cut -f 3 -d " " `
+    set w = `echo $sel | cut -f 4 -d " " `
+    set h = `echo $sel | cut -f 5 -d " "  | tr -d \"`
+    echo  $sel
+    echo $x
+    echo $y
+    echo $w
+    echo $h
+    set crop = "-crop $x $y $w $h"
+endif
 cd jpeg-exports
 echo "Running PTMFitter"
-ptmfit -cache -i ../assembly-files/capture.lp -o ../finished-files/output.ptm
+ptmfit -cache -i ../assembly-files/capture.lp -o ../finished-files/output.ptm $crop
 echo "PTMFitter Complete"
