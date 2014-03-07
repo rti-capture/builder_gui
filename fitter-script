@@ -23,7 +23,6 @@ if((! -d original-captures) || (! -d jpeg-exports) || (! -d finished-files) || (
 	echo "No valid folder structure detected"
 	exit 2
 endif
-
 if (! -e $lpfile) then
 	#lpfile doesn't exist or full path isn't given
 	echo "Not able to find lpfile on path specified, make sure it's a full path"
@@ -47,6 +46,7 @@ else
 	exit 4
 endif
 #run the fitter
+cd jpeg-exports
 echo "Running PTMFitter"
-ptmfit -cache -i ./assembly-files/capture.lp -o finished-files/output.ptm
+ptmfit -cache -i ../assembly-files/capture.lp -o ../finished-files/output.ptm
 echo "PTMFitter Complete"

@@ -1,15 +1,18 @@
 #!/usr/bin/env python
 
-
-import pygtk
-pygtk.require('2.0')
-import gtk
 import subprocess
 import sys
 import time 
 
+if sys.platform == 'darwin':
+    sys.path.append('/usr/local/lib/python2.7/site-packages')
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
 lp_file = "/usr/local/share/generic.lp"
-fitter_script = "fitter-script"
+fitter_script = "./fitter-script"
 
 class RTIFitterGUI:
 
@@ -23,53 +26,53 @@ class RTIFitterGUI:
         response = chooser.run()
         filename = chooser.get_filename()
         chooser.hide()
-	print filename
-	if filename is None:
-		print "No folder selected doing nothing"
-	else:
-		self.button1.hide
-		fitps = subprocess.Popen(args ="%s \"%s\" \"%s\""% (fitter_script, lp_file, filename), 
-					shell = True,
-					stdout = sys.stdout,
-					stderr = sys.stderr)
-		retVal = fitps.wait()	
-		if(retVal == 0):
-			md = gtk.MessageDialog(self.window, 
-					gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_INFO, 
-					gtk.BUTTONS_CLOSE, "Fitting completed")
-			md.run()
-			md.destroy()
-		elif (retVal == 1):
-			md = gtk.MessageDialog(self.window, 
-					gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_ERROR, 
-					gtk.BUTTONS_CLOSE, "Error: Wrong parameters sent")
-			md.run()
-			md.destroy()
-		elif(retVal == 2):
-			md = gtk.MessageDialog(self.window, 
-					gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_ERROR, 
-					gtk.BUTTONS_CLOSE, "Error: Not a valid PTM hierachy")
-			md.run()
-			md.destroy()
-		elif (retVal == 3):
-			md = gtk.MessageDialog(self.window, 
-					gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_ERROR, 
-					gtk.BUTTONS_CLOSE, "Error: LP file not found")
-			md.run()
-			md.destroy()
-		elif(retVal == 4):
-			md = gtk.MessageDialog(self.window, 
-					gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_ERROR, 
-					gtk.BUTTONS_CLOSE, "Error: No Valid NEF/JPEG files found")
-			md.run()
-			md.destroy()
-		else:
-			md = gtk.MessageDialog(self.window, 
-					gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_ERROR, 
-					gtk.BUTTONS_CLOSE, "Error: Something really unexpected went wrong")
-			md.run()
-			md.destroy()
-		self.button1.show
+        print filename
+        if filename is None:
+            print "No folder selected doing nothing"
+        else:
+            self.button1.hide
+            fitps = subprocess.Popen(args ="%s \"%s\" \"%s\""% (fitter_script, lp_file, filename), 
+                        shell = True,
+                        stdout = sys.stdout,
+                        stderr = sys.stderr)
+            retVal = fitps.wait()   
+            if(retVal == 0):
+                md = gtk.MessageDialog(self.window, 
+                        gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_INFO, 
+                        gtk.BUTTONS_CLOSE, "Fitting completed")
+                md.run()
+                md.destroy()
+            elif (retVal == 1):
+                md = gtk.MessageDialog(self.window, 
+                        gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_ERROR, 
+                        gtk.BUTTONS_CLOSE, "Error: Wrong parameters sent")
+                md.run()
+                md.destroy()
+            elif(retVal == 2):
+                md = gtk.MessageDialog(self.window, 
+                        gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_ERROR, 
+                        gtk.BUTTONS_CLOSE, "Error: Not a valid PTM hierachy")
+                md.run()
+                md.destroy()
+            elif (retVal == 3):
+                md = gtk.MessageDialog(self.window, 
+                        gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_ERROR, 
+                        gtk.BUTTONS_CLOSE, "Error: LP file not found")
+                md.run()
+                md.destroy()
+            elif(retVal == 4):
+                md = gtk.MessageDialog(self.window, 
+                        gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_ERROR, 
+                        gtk.BUTTONS_CLOSE, "Error: No Valid NEF/JPEG files found")
+                md.run()
+                md.destroy()
+            else:
+                md = gtk.MessageDialog(self.window, 
+                        gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_ERROR, 
+                        gtk.BUTTONS_CLOSE, "Error: Something really unexpected went wrong")
+                md.run()
+                md.destroy()
+            self.button1.show
 
     # another callback
     def delete_event(self, widget, event, data=None):
@@ -125,7 +128,7 @@ def main():
     gtk.main()
 
 if __name__ == "__main__":
-	fitter = RTIFitterGUI()
-	main()
+    fitter = RTIFitterGUI()
+    main()
 
 
