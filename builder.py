@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 
 import subprocess
 import sys
@@ -12,7 +12,7 @@ pygtk.require('2.0')
 import gtk
 
 lp_file = "/usr/local/share/generic.lp"
-fitter_script = "./fitter-script"
+fitter_script = "/usr/local/bin/fitter-script"
 
 class RTIFitterGUI:
 

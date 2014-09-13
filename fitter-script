@@ -8,6 +8,7 @@
 #	2 not the correct hierachy
 #	3 lpfile not found
 #	4 No valid jpef/nef files found
+#	5 ptmfit failed
 set nonomatch
 if($#argv != 2) then
 	echo "Wrong number of parameters specified"
@@ -64,4 +65,10 @@ endif
 cd jpeg-exports
 echo "Running PTMFitter"
 ptmfit -cache -i ../assembly-files/capture.lp -o ../finished-files/output.ptm $crop
-echo "PTMFitter Complete"
+if ($status == 0) then
+    echo "PTMFitter Complete"
+    exit 0
+else
+    echo "PTM fit failed"
+    exit 5
+endif
